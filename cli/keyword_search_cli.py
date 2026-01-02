@@ -3,6 +3,7 @@
 import argparse
 import json
 import string
+from nltk.stem import PorterStemmer
 from logging.config import stopListening
 
 
@@ -29,11 +30,12 @@ def main() -> None:
 
 
 def retrieve_tokens(title):
+    stemmer = PorterStemmer()
     with open("./data/stopwords.txt", "r") as f:
         data = f.read()
         lines = data.splitlines()
     translation_table = str.maketrans("", "", string.punctuation)
-    return [token.lower() for token in title.translate(translation_table).split() if token and token not in lines]
+    return [stemmer.stem(token.lower()) for token in title.translate(translation_table).split() if token and token not in lines]
 
 if __name__ == "__main__":
     main()
